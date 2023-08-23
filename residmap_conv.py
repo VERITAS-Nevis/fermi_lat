@@ -376,9 +376,15 @@ def _make_residual_map_wcs(gta, prefix, convolve, **kwargs):
 
             imin = utils.val_to_edge(c.log_energies, loge_bounds[0])[0]
             imax = utils.val_to_edge(c.log_energies, loge_bounds[1])[0]
-
-            mc = c.model_counts_map(exclude=exclude).data.astype('float')
-            cc = c.counts_map().data.astype('float')
+            
+            mc = c.model_counts_map(exclude=exclude)
+            mc = plotting.make_cube_slice(mc, [loge_bounds[0],loge_bounds[1]])
+            mc = mc.data.astype('float')
+            
+            cc = c.counts_map()
+            cc = plotting.make_cube_slice(cc, [loge_bounds[0],loge_bounds[1]])
+            cc = cc.data.astype('float')
+        
             ec = np.ones(mc.shape)
 
             if use_weights:
@@ -399,9 +405,9 @@ def _make_residual_map_wcs(gta, prefix, convolve, **kwargs):
             mms = np.sum(mcs, axis=0)
             ems = np.sum(ecs, axis=0)
 
-            cmst += cms
-            mmst += mms
-            emst += ems
+            cmst += cmst
+            mmst += mmst
+            emst += emst
 
             # cts = 2.0 * (poisson_lnl(cms, cms) - poisson_lnl(cms, mms))
             excess += cms - mms
@@ -418,8 +424,13 @@ def _make_residual_map_wcs(gta, prefix, convolve, **kwargs):
             imin = utils.val_to_edge(c.log_energies, loge_bounds[0])[0]
             imax = utils.val_to_edge(c.log_energies, loge_bounds[1])[0]
 
-            mc = c.model_counts_map(exclude=exclude).data.astype('float')
-            cc = c.counts_map().data.astype('float')
+            mc = c.model_counts_map(exclude=exclude)
+            mc = plotting.make_cube_slice(mc, [loge_bounds[0],loge_bounds[1]])
+            mc = mc.data.astype('float')
+            
+            cc = c.counts_map()
+            cc = plotting.make_cube_slice(cc, [loge_bounds[0],loge_bounds[1]])
+            cc = cc.data.astype('float')
             
             cms = np.sum(cc, axis=0)
             mms = np.sum(mc, axis=0)
